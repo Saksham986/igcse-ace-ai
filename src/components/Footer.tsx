@@ -12,7 +12,7 @@ const Footer = () => {
               <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                 <BookOpen className="h-5 w-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-primary">IGCSEwise</span>
+              <span className="text-xl font-bold text-primary">Studybuddy Ai</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Your AI-powered IGCSE companion. Master every subject with personalized 
@@ -73,7 +73,7 @@ const Footer = () => {
 
         <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2024 IGCSEwise. All rights reserved. Empowering IGCSE students worldwide.
+            © 2024 Studybuddy Ai. All rights reserved. Empowering IGCSE students worldwide.
           </p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span>Made with AI for education</span>

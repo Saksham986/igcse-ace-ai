@@ -10,7 +10,7 @@ const Header = () => {
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
               <BookOpen className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold text-primary">IGCSEwise</span>
+            <span className="text-xl font-bold text-primary">Studybuddy Ai</span>
           </div>
           
           <nav className="hidden md:flex items-center gap-6">
@@ -18,10 +18,7 @@ const Header = () => {
               Resources
             </a>
             <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              AI Tutor
-            </a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Practice
+              AI Chatbot
             </a>
             <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Progress
