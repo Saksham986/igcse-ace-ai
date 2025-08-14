@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Send, MessageSquare, Bot, User, Sparkles } from "lucide-react";
+import { Send, MessageSquare, Bot, User, Sparkles, Loader2 } from "lucide-react";
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import aiIcon from "@/assets/ai-assistant-icon.jpg";
 
 interface Message {
@@ -24,9 +26,12 @@ const AIChat = () => {
     }
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
 
     const newUserMessage: Message = {
       id: messages.length + 1,
@@ -36,18 +41,63 @@ const AIChat = () => {
     };
 
     setMessages(prev => [...prev, newUserMessage]);
+    const messageContent = inputValue;
     setInputValue("");
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: Message = {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Please sign in to continue');
+      }
+
+      const response = await supabase.functions.invoke('ai-chat', {
+        body: {
+          message: messageContent,
+          conversationId: conversationId,
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      const { response: aiResponse, conversationId: newConversationId } = response.data;
+      
+      if (newConversationId && !conversationId) {
+        setConversationId(newConversationId);
+      }
+
+      const aiMessage: Message = {
         id: messages.length + 2,
-        content: "I understand you need help with that topic. Let me provide you with a detailed explanation and relevant resources. Would you like me to break this down step by step?",
+        content: aiResponse,
         sender: 'ai',
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1500);
+
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (error: any) {
+      console.error('Error sending message:', error);
+      toast({
+        variant: "destructive",
+        title: "Failed to send message",
+        description: error.message || 'Please try again later'
+      });
+      
+      // Add error message to chat
+      const errorMessage: Message = {
+        id: messages.length + 2,
+        content: "I'm sorry, I couldn't process your message right now. Please try again.",
+        sender: 'ai',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -147,9 +197,13 @@ const AIChat = () => {
                     variant="ai" 
                     size="icon"
                     onClick={handleSendMessage}
-                    disabled={!inputValue.trim()}
+                    disabled={!inputValue.trim() || isLoading}
                   >
-                    <Send className="h-4 w-4" />
+                    {isLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
                     <span className="sr-only">Send message</span>
                   </Button>
                 </div>
