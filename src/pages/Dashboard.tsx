@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface Assessment {
   id: string;
@@ -23,8 +25,11 @@ interface Attempt {
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
+  const [plan, setPlan] = useState<string>("");
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -55,6 +60,22 @@ const Dashboard = () => {
 
   const avgAssess = recentAverage(assessments);
   const avgQuiz = recentAverage(attempts);
+
+  const generatePlan = async () => {
+    if (!user) { window.location.href = '/auth'; return; }
+    setGenerating(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data, error } = await supabase.functions.invoke('generate-plan', {
+        body: {},
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+      if (error) throw error;
+      setPlan(data.plan || '');
+    } catch (e: any) {
+      toast({ variant: 'destructive', title: 'Failed to generate plan', description: e.message || 'Try again' });
+    } finally { setGenerating(false); }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -110,6 +131,19 @@ const Dashboard = () => {
               ))}
               {attempts.length === 0 && <li className="text-muted-foreground">No quiz attempts yet.</li>}
             </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Revision Plan</CardTitle>
+            <CardDescription>Generate a personalized 4-week plan</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={generatePlan} disabled={generating}>{generating ? 'Generating...' : 'Generate Plan'}</Button>
+            {plan && (
+              <div className="prose prose-sm mt-4 whitespace-pre-wrap">{plan}</div>
+            )}
           </CardContent>
         </Card>
       </main>

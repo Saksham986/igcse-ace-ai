@@ -10,6 +10,7 @@ import Resources from "./pages/Resources";
 import Assess from "./pages/Assess";
 import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/Dashboard";
+import Flashcards from "./pages/Flashcards";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/assess" element={<Assess />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/flashcards" element={<Flashcards />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
