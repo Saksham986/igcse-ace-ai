@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, Search, User, BookOpen, MessageSquare, BarChart3, LogOut } from "lucide-react";
+import { Menu, User, BookOpen } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
@@ -15,17 +15,22 @@ const Header = () => {
             </div>
             <span className="text-xl font-bold text-primary">IGCSE AI Tutor</span>
           </div>
-          
           {user && (
             <nav className="hidden md:flex items-center gap-6">
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Chat
               </a>
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Progress
-              </a>
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/resources" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Resources
+              </a>
+              <a href="/assess" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Assess
+              </a>
+              <a href="/quiz" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Quiz
+              </a>
+              <a href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Progress
               </a>
             </nav>
           )}
@@ -39,21 +44,15 @@ const Header = () => {
                 <span>{user.email}</span>
               </div>
               <Button variant="ghost" size="sm" onClick={signOut}>
-                <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </Button>
             </>
           ) : (
             <>
-              <Button variant="outline" onClick={() => window.location.href = '/auth'}>
-                Sign In
-              </Button>
-              <Button variant="hero" onClick={() => window.location.href = '/auth'}>
-                Get Started
-              </Button>
+              <Button variant="outline" onClick={() => (window.location.href = "/auth")}>Sign In</Button>
+              <Button variant="hero" onClick={() => (window.location.href = "/auth")}>Get Started</Button>
             </>
           )}
-          
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-4 w-4" />
             <span className="sr-only">Menu</span>
