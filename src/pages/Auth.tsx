@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, GraduationCap } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,17 +16,18 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check if user is already logged in
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        window.location.href = '/';
+        navigate(import.meta.env.BASE_URL, { replace: true });
       }
     };
     checkUser();
-  }, []);
+  }, [navigate]);
 
   const cleanupAuthState = () => {
     Object.keys(localStorage).forEach((key) => {
@@ -72,7 +74,7 @@ const Auth = () => {
           title: "Welcome back!",
           description: "Successfully signed in."
         });
-        window.location.href = '/';
+        navigate(import.meta.env.BASE_URL, { replace: true });
       }
     } catch (error: any) {
       toast({
@@ -105,7 +107,7 @@ const Auth = () => {
         // Continue even if this fails
       }
 
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = `${window.location.origin}${import.meta.env.BASE_URL}`;
       
       const { data, error } = await supabase.auth.signUp({
         email,

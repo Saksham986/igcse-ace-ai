@@ -7,15 +7,17 @@ import AIChat from "@/components/AIChat";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoading && !user) {
-      window.location.href = '/auth';
+      navigate(`${import.meta.env.BASE_URL}auth`, { replace: true });
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, navigate]);
 
   if (isLoading) {
     return (
@@ -41,7 +43,7 @@ const Index = () => {
           </div>
           <h2 className="text-xl font-semibold mb-2">Welcome to IGCSE AI Tutor</h2>
           <p className="text-muted-foreground mb-6">Sign in to start your personalized learning journey</p>
-          <Button onClick={() => window.location.href = '/auth'}>
+          <Button onClick={() => navigate(`${import.meta.env.BASE_URL}auth`, { replace: true })}>
             Get Started
           </Button>
         </div>
