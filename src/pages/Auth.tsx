@@ -23,7 +23,7 @@ const Auth = () => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        navigate(import.meta.env.BASE_URL, { replace: true });
+        navigate('/', { replace: true });
       }
     };
     checkUser();
@@ -74,7 +74,7 @@ const Auth = () => {
           title: "Welcome back!",
           description: "Successfully signed in."
         });
-        navigate(import.meta.env.BASE_URL, { replace: true });
+        navigate('/', { replace: true });
       }
     } catch (error: any) {
       toast({
@@ -107,7 +107,7 @@ const Auth = () => {
         // Continue even if this fails
       }
 
-      const redirectUrl = `${window.location.origin}${import.meta.env.BASE_URL}`;
+      const redirectUrl = `${window.location.origin}/igcse-ace-ai/`;
       
       const { data, error } = await supabase.auth.signUp({
         email,

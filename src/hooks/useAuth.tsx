@@ -20,7 +20,7 @@ export const useAuth = () => {
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (!session?.user) {
-        navigate(`${import.meta.env.BASE_URL}auth`, { replace: true });
+        navigate('/auth', { replace: true });
       }
     });
 
@@ -32,7 +32,7 @@ export const useAuth = () => {
   const signOut = async () => {
     await supabase.auth.signOut({ scope: 'global' });
     setUser(null);
-    navigate(`${import.meta.env.BASE_URL}auth`, { replace: true });
+    navigate('/auth', { replace: true });
   };
 
   return { user, isLoading, signOut };

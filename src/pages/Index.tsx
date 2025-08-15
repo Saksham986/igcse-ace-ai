@@ -15,7 +15,7 @@ const Index = () => {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      navigate(`${import.meta.env.BASE_URL}auth`, { replace: true });
+      navigate('/auth', { replace: true });
     }
   }, [user, isLoading, navigate]);
 
@@ -43,7 +43,7 @@ const Index = () => {
           </div>
           <h2 className="text-xl font-semibold mb-2">Welcome to IGCSE AI Tutor</h2>
           <p className="text-muted-foreground mb-6">Sign in to start your personalized learning journey</p>
-          <Button onClick={() => navigate(`${import.meta.env.BASE_URL}auth`, { replace: true })}>
+          <Button onClick={() => navigate('/auth', { replace: true })}>
             Get Started
           </Button>
         </div>
